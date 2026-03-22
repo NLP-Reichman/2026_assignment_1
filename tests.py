@@ -1,6 +1,11 @@
 ########################################
-# PLACE TESTS HERE #
-# Create tests
+# Tests
+
+def test_link():
+    return {
+        'link': NOTEBOOK_LINK
+    }
+
 def test_preprocess():
     return {
         'vocab_length': len(preprocess()),
@@ -74,8 +79,5 @@ for test in TESTS:
 
 with open('results.json', 'w') as f:
     json.dump(res, f, indent=2)
-
-if COLAB:
-    from google.colab import files
-    files.download('results.json')
+    
 ########################################

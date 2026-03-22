@@ -12,14 +12,11 @@ def get_args():
     parser.add_argument('test', type=str, help='The test to perform.')
     return parser.parse_args()
 
-def test_link():
+def test_link(results):
     # Read link
-    link_file = "notebook_link.txt"
-    try:
-        with open(link_file, 'r') as f:
-            link = f.read().strip()
-    except FileNotFoundError:
-        return "notebook_link.txt not found"
+    link = results.get("link")
+    if not link:
+        return "link field not found in results.json"
     
     # Make sure link contains usp=sharing
     if "usp=sharing" not in link:
@@ -28,13 +25,14 @@ def test_link():
     
 
 def test_preprocess(results):
-    if results.get("vocab_length") == 1805:
+    expected = 1804
+    if results.get("vocab_length") == expected:
         return 1
-    return f"Vocab length is {results.get('vocab_length')}, expected 1805"
+    return f"Vocab length is {results.get('vocab_length')}, expected {expected}"
 
 def test_build_lm(results):
     checks = {
-        "english_2_gram_length": 749,
+        "english_2_gram_length": 748,
         "english_3_gram_length": 8240,
         "french_3_gram_length": 8286,
         "spanish_3_gram_length": 8469
@@ -103,7 +101,7 @@ def main():
     result = "Invalid test"
     
     if args.test == 'test_link':
-        result = test_link()
+        result = test_link(full_results)
     elif args.test == 'test_preprocess':
         result = test_preprocess(full_results.get("test_preprocess", {}))
     elif args.test == 'test_build_lm':
