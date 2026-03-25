@@ -1,6 +1,6 @@
 '''
 Main script for testing the 2026 assignment.
-Runs the tests on the results json file with integer grading (20 per test).
+Runs the tests on the results json file with binary grading (0/1).
 '''
 
 import argparse
@@ -21,13 +21,13 @@ def test_link(results):
     # Make sure link contains usp=sharing
     if "usp=sharing" not in link:
         return f"Link {link} doesn't seem to have share access"
-    return 20
+    return 1
     
 
 def test_preprocess(results):
     expected = 1804
     if results.get("vocab_length") == expected:
-        return 20
+        return 1
     return f"Vocab length is {results.get('vocab_length')}, expected {expected}"
 
 def test_build_lm(results):
@@ -41,7 +41,7 @@ def test_build_lm(results):
     for key, expected in checks.items():
         if results.get(key) != expected:
             return f"{key}: expected {expected}, got {results.get(key)}"
-    return 20
+    return 1
     
 def test_eval(results):
     try:
@@ -58,7 +58,7 @@ def test_eval(results):
     if not (en_on_en < en_on_fr < max(en_on_tl, en_on_nl)):
         return "Expected increasing perplexity trend"
         
-    return 20
+    return 1
 
 def test_generate(results):
     if not results.get("english_2_gram", "").startswith("I am"):
@@ -68,7 +68,7 @@ def test_generate(results):
     if not results.get("french_3_gram", "").startswith("Je suis"):
         return "French 3-gram failure"
     
-    return 20
+    return 1
 
 def main():
     args = get_args()
