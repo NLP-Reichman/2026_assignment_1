@@ -1,6 +1,6 @@
 '''
 Main script for testing the 2026 assignment.
-Runs the tests on the results json file with binary grading (0/1).
+Runs the tests on the results json file with integer grading (20 per test).
 '''
 
 import argparse
@@ -21,13 +21,13 @@ def test_link(results):
     # Make sure link contains usp=sharing
     if "usp=sharing" not in link:
         return f"Link {link} doesn't seem to have share access"
-    return 1
+    return 20
     
 
 def test_preprocess(results):
     expected = 1804
     if results.get("vocab_length") == expected:
-        return 1
+        return 20
     return f"Vocab length is {results.get('vocab_length')}, expected {expected}"
 
 def test_build_lm(results):
@@ -41,7 +41,7 @@ def test_build_lm(results):
     for key, expected in checks.items():
         if results.get(key) != expected:
             return f"{key}: expected {expected}, got {results.get(key)}"
-    return 1
+    return 20
     
 def test_eval(results):
     try:
@@ -58,7 +58,7 @@ def test_eval(results):
     if not (en_on_en < en_on_fr < max(en_on_tl, en_on_nl)):
         return "Expected increasing perplexity trend"
         
-    return 1
+    return 20
 
 def test_generate(results):
     if not results.get("english_2_gram", "").startswith("I am"):
@@ -68,26 +68,7 @@ def test_generate(results):
     if not results.get("french_3_gram", "").startswith("Je suis"):
         return "French 3-gram failure"
     
-    return 1
-
-def test_embeddings(results):
-    # Similarity
-    sim = results.get("similarity_score", 0)
-    if not (0.5 < sim < 0.9):
-        return f"Similarity score {sim} out of expected range"
-    
-    # Analogy
-    if results.get("analogy_result", "").lower() != "queen":
-        return f"Analogy failed: got {results.get('analogy_result')}"
-        
-    # Lang ID accuracy check
-    preds = results.get("lang_id_predictions", {})
-    expected_langs = ["en", "es", "fr", "it"]
-    for lang in expected_langs:
-        if preds.get(lang) != lang:
-            return f"Language identification failed for {lang}: predicted {preds.get(lang)}"
-        
-    return 1
+    return 20
 
 def main():
     args = get_args()
@@ -110,8 +91,6 @@ def main():
         result = test_eval(full_results.get("test_eval", {}))
     elif args.test == 'test_generate':
         result = test_generate(full_results.get("test_generate", {}))
-    elif args.test == 'test_embeddings':
-        result = test_embeddings(full_results.get("test_embeddings", {}))
 
     # Print result for autograder
     print(result)

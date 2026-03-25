@@ -39,33 +39,7 @@ def test_generate():
         'french_3_gram': generate('fr', 3, "Je suis", 20, 5),
     }
 
-def test_embeddings():
-    # Similarity
-    sim = get_similarity("king", "queen", glove_vectors)
-    # Analogy
-    analogy = solve_analogy("man", "king", "woman", glove_vectors) # king - man + woman = queen
-    
-    # Lang ID with real embeddings and test sentences
-    language_embeddings = compute_language_embeddings(glove_vectors)
-    
-    test_cases = {
-        "en": "I love learning about natural language processing.",
-        "es": "Me encanta aprender sobre el procesamiento del lenguaje natural.",
-        "fr": "J'aime apprendre le traitement du langage naturel.",
-        "it": "Mi piace imparare il trattamento del linguaggio naturale."
-    }
-    
-    predictions = {}
-    for lang, sentence in test_cases.items():
-        predictions[lang] = predict_language(sentence, language_embeddings, glove_vectors)
-    
-    return {
-        'similarity_score': float(sim) if sim is not None else 0,
-        'analogy_result': analogy,
-        'lang_id_predictions': predictions
-    }
-
-TESTS = [test_preprocess, test_build_lm, test_eval, test_generate, test_embeddings]
+TESTS = [test_preprocess, test_build_lm, test_eval, test_generate]
 
 # Run tests and save results
 res = {}
