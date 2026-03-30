@@ -82,7 +82,7 @@ def main():
     result = "Invalid test"
     
     if args.test == 'test_link':
-        result = test_link(full_results)
+        result = test_link(full_results.get("test_link", {}))
     elif args.test == 'test_preprocess':
         result = test_preprocess(full_results.get("test_preprocess", {}))
     elif args.test == 'test_build_lm':
